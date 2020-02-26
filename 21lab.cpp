@@ -13,6 +13,6 @@ int main()
     {
         h[i] = new x;
         h[i]->p = new int;
-     //   h[i]->p = 1;
+     //   h[i]->p = 1;//
     }
 }
