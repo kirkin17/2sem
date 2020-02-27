@@ -8,11 +8,16 @@ struct x
 
 int main()
 {
-    x *h[50];
+    //1 задание
+    x* h[50];
     for (int i = 0; i < 50; i++)
     {
         h[i] = new x;
         h[i]->p = new int;
-        h[i]->p = 1;
+        *(h[i]->p) = 1;
+
     }
+
+    //2 задание
+    x* 
 }
