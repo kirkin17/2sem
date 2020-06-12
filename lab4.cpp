@@ -12,11 +12,8 @@ struct unit
 
 void newunit(char ch, int number, unit* a)
 {
-    //a = new unit;
     (*a).ch = ch;
     (*a).number = number;
-    //(*a).next = NULL;
-    //(*a).nextup = NULL;
 }
 
 unit* getnextpoint(unit* a)
@@ -32,7 +29,7 @@ bool comparefrstsmin(unit* a, unit* b) //сравнивает числа у те
 
 void sort(unit* a, unit* b) //a - это текущий, b - первый, тоесть минимальный в списке
 {
-    (*b).nextup = (*a).nextup;
+    (*a).nextup = (*b).nextup;
 }
 
 
@@ -41,7 +38,6 @@ int main()
     unit* frstinput; //указатель на первый элемент для связи в порядке ввода
     unit* frstup; //указатель на 1 эл для связи больший эл
     unit* point; //бегающий указатель
-//    unit* minpoint; //указатель на минимальный эл
     unit* pointup; //указатель на больший элемент
     frstinput = point;
     frstup = point;
@@ -75,7 +71,7 @@ int main()
     {
         cout << "1. Вывод литер в порядке ввода\n2. Вывод чисел в порядке возрастания\n0. Выход из программы\n";
         cin >> menu;
-        while (cin >> menu)
+        while (1)
         {
             switch (menu)
             {
@@ -95,7 +91,7 @@ int main()
                 {
                 cout << (*point).ch << " " << (*point).number << "\n";
                 point = (*point).nextup;
-                //break;
+                break;
                 }            
                 break;            
             case 0:
