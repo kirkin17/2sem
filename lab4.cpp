@@ -4,17 +4,17 @@ using namespace std;
 struct unit
 {
     char ch;
-    int num; 
+    int number; 
     unit* next;     //ук на след эл
     unit* nextup;   //указатель на больший элемент
 
 };
 
-void newunit(char ch, int num, unit* a)
+void newunit(char ch, int number, unit* a)
 {
-    a = new unit;
+    //a = new unit;
     (*a).ch = ch;
-    (*a).num = num;
+    (*a).number = number;
     //(*a).next = NULL;
     //(*a).nextup = NULL;
 }
@@ -26,11 +26,11 @@ unit* getnextpoint(unit* a)
 
 bool comparefrstsmin(unit* a, unit* b) //сравнивает числа у текущего указателя и предыдущего (1 - текущее значение меньше, чем предыдущее)
 {
-    if ((*a).num < (*b).num) return 1;
+    if ((*a).number < (*b).number) return 1;
     else return 0;
 }
 
-void sort(unit* a, unit* b) //a - это текущий, b - предыдущий
+void sort(unit* a, unit* b) //a - это текущий, b - первый, тоесть минимальный в списке
 {
     (*b).nextup = (*a).nextup;
 }
@@ -50,22 +50,22 @@ int main()
     
     
     cout << "Введите последовательность \"литера цифра\" (через пробел):\n";
-    cout << "Например \"g 11\"";
+    cout << "Например \"g 11\"\n";
     cin >> ch >> num;
     while (1)
     {
         if (ch == '0' && num == 0)
         {
-            (*point).next = NULL;
+            point = NULL;
             break;
         }
+        point = new unit;
         newunit(ch,num,point);
-        frstup = point;
-        point = getnextpoint(point);
-        if (comparefrstsmin) 
+        if (comparefrstsmin(point,frstup)) 
         {
-
+            sort(point,frstup);
         }
+        point = getnextpoint(point);
         cin >> ch >> num;
     }
 
@@ -84,7 +84,7 @@ int main()
                 point = frstinput;
                 while((*point).next != NULL)
                 {
-                cout << (*point).ch << " " << (*point).num << "\n";
+                cout << (*point).ch << " " << (*point).number << "\n";
                 point = (*point).next;
                 break;
                 }            
@@ -93,7 +93,7 @@ int main()
                 point = frstup;
                 while((*point).next != NULL)
                 {
-                cout << (*point).ch << " " << (*point).num << "\n";
+                cout << (*point).ch << " " << (*point).number << "\n";
                 point = (*point).nextup;
                 //break;
                 }            
