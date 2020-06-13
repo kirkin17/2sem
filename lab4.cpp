@@ -21,7 +21,7 @@ unit* getnextpoint(unit* a)
     return (*a).next;
 }
 
-bool comparefrstsmin(unit* a, unit* b) //сравнивает числа у текущего указателя и предыдущего (1 - текущее значение меньше, чем предыдущее)
+bool compare(unit* a, unit* b) // 1 если первое меньше
 {
     if ((*a).number < (*b).number) return 1;
     else return 0;
@@ -29,7 +29,8 @@ bool comparefrstsmin(unit* a, unit* b) //сравнивает числа у те
 
 void sort(unit* a, unit* b) //a - это текущий, b - первый, тоесть минимальный в списке
 {
-    (*b).nextup = (*a).nextup;
+    (*a).nextup = b;
+    b = a;
 }
 
 
@@ -46,25 +47,32 @@ int main()
     cout << "Введите последовательность \"литера цифра\" (через пробел):\n";
     cout << "Например \"g 11\"\n";
     cin >> ch >> num;
-    if (ch == '0' && num == 0) return 0;
+    if (ch == '0' && num == 0) return 0; //если сразу же вводим 0 0
     point = new unit;
     newunit(ch,num,point);
     frstinput = point;
     frstup = point;
+    pointup = point;
     while (1)
     {
+        if (compare(point,frstup))
+        {
+            (*point).nextup = frstup;
+            frstup = point;
+        }
+        if compare(point,)
+        {
+            (point).nextup = 
+        }
+        //cout << comparefrstsmin(point,frstup) << "\n";
+        cin >> ch >> num;
         if (ch == '0' && num == 0)
         {
-            point = NULL;
+            (*point).next = NULL;
             break;
         }
-        if (comparefrstsmin(point,frstup)) 
-        {
-            sort(point,frstup);
-        }
-        point = getnextpoint(point);
-        cin >> ch >> num;
-        point = new unit;
+        (*point).next = new unit;
+        point = (*point).next;
         newunit(ch,num,point);
     }
 
@@ -74,28 +82,30 @@ int main()
     {
         cout << "1. Вывод литер в порядке ввода\n2. Вывод чисел в порядке возрастания\n0. Выход из программы\n";
         cin >> menu;
-        while (1)
-        {
             switch (menu)
             {
             case 1:
+                //system("clear");
                 cout << "1. Вывод литер в порядке ввода\n";
                 point = frstinput;
-                while((*point).next != NULL)
+                while(point != NULL)
                 {
                 cout << (*point).ch << " " << (*point).number << "\n";
                 point = (*point).next;
-                break;
-                }            
+                //cout << "Нажмите любую клавишу для продолжения...\n";
+                }  
+                menu = -1;
+                break;          
             case 2:
+                //system("clear");
                 cout << "2. Вывод чисел в порядке возрастания\n";
                 point = frstup;
-                while((*point).next != NULL)
+                while(point != NULL)
                 {
                 cout << (*point).ch << " " << (*point).number << "\n";
                 point = (*point).nextup;
-                break;
-                }            
+                }
+                menu = -1;         
                 break;            
             case 0:
                 break;            
@@ -103,6 +113,5 @@ int main()
                 cout << "Вы ошиблись, такого пункта нет!\n";
                 break;
             }
-        }
     }
 }
