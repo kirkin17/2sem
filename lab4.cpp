@@ -29,7 +29,7 @@ bool comparefrstsmin(unit* a, unit* b) //сравнивает числа у те
 
 void sort(unit* a, unit* b) //a - это текущий, b - первый, тоесть минимальный в списке
 {
-    (*a).nextup = (*b).nextup;
+    (*b).nextup = (*a).nextup;
 }
 
 
@@ -39,8 +39,6 @@ int main()
     unit* frstup; //указатель на 1 эл для связи больший эл
     unit* point; //бегающий указатель
     unit* pointup; //указатель на больший элемент
-    frstinput = point;
-    frstup = point;
     char ch;
     int num;
     
@@ -48,6 +46,11 @@ int main()
     cout << "Введите последовательность \"литера цифра\" (через пробел):\n";
     cout << "Например \"g 11\"\n";
     cin >> ch >> num;
+    if (ch == '0' && num == 0) return 0;
+    point = new unit;
+    newunit(ch,num,point);
+    frstinput = point;
+    frstup = point;
     while (1)
     {
         if (ch == '0' && num == 0)
@@ -55,14 +58,14 @@ int main()
             point = NULL;
             break;
         }
-        point = new unit;
-        newunit(ch,num,point);
         if (comparefrstsmin(point,frstup)) 
         {
             sort(point,frstup);
         }
         point = getnextpoint(point);
         cin >> ch >> num;
+        point = new unit;
+        newunit(ch,num,point);
     }
 
     //Меню
