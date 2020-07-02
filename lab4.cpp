@@ -39,7 +39,7 @@ int main()
     unit* frstinput; //указатель на первый элемент для связи в порядке ввода
     unit* frstup; //указатель на 1 эл для связи больший эл
     unit* point; //бегающий указатель
-    unit* pointup; //указатель на больший элемент
+    unit* pointsort;
     char ch;
     int num;
     
@@ -52,19 +52,17 @@ int main()
     newunit(ch,num,point);
     frstinput = point;
     frstup = point;
-    pointup = point;
     while (1)
     {
-        if (compare(point,frstup))
+        pointsort = frstup;
+        while(pointsort != NULL)
         {
-            (*point).nextup = frstup;
-            frstup = point;
+            if (compare(point,pointsort))
+            {
+                (*pointsort).nextup = point;
+            }
+            pointsort = (*frstup).nextup;
         }
-        if compare(point,)
-        {
-            (point).nextup = 
-        }
-        //cout << comparefrstsmin(point,frstup) << "\n";
         cin >> ch >> num;
         if (ch == '0' && num == 0)
         {
