@@ -15,6 +15,7 @@ struct stud
 struct group
 {
     stud *begin = NULL; //указатель на начало списка студентов группы
+    stud *current = NULL;
     int count = 0; //количество студентов в группе
     int num; //номер группы
     stud* next = NULL; //следующий в списке группы
@@ -31,18 +32,18 @@ void newstudent(group *current)
 {
     system("clear");
     cout << "Введите ФИО студента: ";
-    current->next->name = inputname();
+    current->current->name = inputname();
     cout << "Введите номер группы: ";
     int group;
     cin >> group;
-    current->next->group = group;
+    current->current->group = group;
     cout << "Введите оценки: ";
     int grades[5];
     for(int i=0; i < 5; i++)
     {
         printf("[%d]. ", i + 1);
         cin >> grades[i];
-        current->next->grades[i] = grades[i];
+        current->current->grades[i] = grades[i];
     }
     cout << "Введите размер стипендии: ";
     int stipend;
