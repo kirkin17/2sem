@@ -30,9 +30,12 @@ string inputname()
 
 void newstudent(group *current)
 {
+    current->current = new stud;
     system("clear");
     cout << "Введите ФИО студента: ";
-    current->current->name = inputname();
+    string name;
+    name = inputname();
+    current->current->name = name;
     cout << "Введите номер группы: ";
     int group;
     cin >> group;
@@ -55,9 +58,9 @@ int main()
     setlocale(LC_ALL, "Russian");
     int menu;
 
-    group *current,*last; //сразу создаем указатели для создания хотя бы одной группы и студента
-    last = NULL;
+    group *current, *begin, *p; //сразу создаем указатели для создания хотя бы одной группы и студента
     current = new group;
+    begin = current;
 
     do
     {
@@ -75,6 +78,23 @@ int main()
         if (menu == 1)
         {
             newstudent(current);
+        }
+        if (menu == 2)
+        {
+            p = begin;
+            while (p != NULL)
+            {
+                cout << "Группа " << p->num << endl;
+                cout << "\tФИО:" << p->begin->name << endl;
+                cout << "\tГруппа: " << p->begin->group << endl;
+                cout << "\tСтипендия: " << p->begin->stipend << endl;
+                cout << "\tОценки:\n";
+                for (int i = 0; i < 5; i++)
+                {
+                    cout << "\t" << i + 1 << ". " << p->begin->grades[i] << endl;
+                }
+                
+            }
         }
     }
     while (menu != 0);

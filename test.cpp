@@ -1,12 +1,18 @@
 #include <iostream>
 using namespace std;
+
+string inputname()
+{
+    string name;
+    getline(cin, name);
+    return name;
+}
+
 int main()
 {
-    int* p;
-    int* k;
-    //p = k;
-    p = new int;
-    k = new int;
-    cin >> *p;
-    cout << *k;
+    string name;
+    cout << "Введите имя: ";
+    name = inputname();
+
+    cout << name;
 }
