@@ -4,6 +4,8 @@
 #include <fstream>
 using namespace std;
 
+
+
 struct stud
 {
     string name; // имя
@@ -16,9 +18,10 @@ struct group
 {
     stud *begin = NULL; //указатель на начало списка студентов группы
     stud *current = NULL;
+    stud* next = NULL; //следующий в списке группы
+    group* nextgr = NULL; //следующая группа
     int count = 0; //количество студентов в группе
     int num; //номер группы
-    stud* next = NULL; //следующий в списке группы
 };
 
 string inputname()
@@ -28,18 +31,23 @@ string inputname()
     return name;
 }
 
-void newstudent(group *current)
+void newstudentkeyboard(group *current)
 {
     current->current = new stud;
+    if (current->begin = NULL)
+    {
+        current->begin = current->current;
+    }
+
     system("clear");
     cout << "Введите ФИО студента: ";
-    string name;
-    name = inputname();
+    string name = inputname();
     current->current->name = name;
     cout << "Введите номер группы: ";
     int group;
     cin >> group;
     current->current->group = group;
+    current->num = group;
     cout << "Введите оценки: ";
     int grades[5];
     for(int i=0; i < 5; i++)
@@ -51,6 +59,27 @@ void newstudent(group *current)
     cout << "Введите размер стипендии: ";
     int stipend;
     cin >> stipend;
+    current->current->stipend = stipend;
+}
+
+void outputkeyboard(group *p)
+{
+    while (p != NULL)
+    {
+        while(p->current != NULL)
+        {
+            cout << "Группа: " << p->num << endl;
+            cout << "\tФИО:" << p->current->name << endl;
+            cout << "\tГруппа: " << p->current->group << endl;
+            cout << "\tСтипендия: " << p->current->stipend << endl;
+            cout << "\tОценки:\n";
+            for (int i = 0; i < 5; i++)
+            {
+                cout << "\t" << i + 1 << ". " << p->begin->grades[i] << endl;
+            }
+        }
+        p = p->nextgr;          
+    }
 }
 
 int main()
@@ -58,7 +87,7 @@ int main()
     setlocale(LC_ALL, "Russian");
     int menu;
 
-    group *current, *begin, *p; //сразу создаем указатели для создания хотя бы одной группы и студента
+    group *current, *begin, *p; //сразу создаем указатели для создания хотя бы одной группы
     current = new group;
     begin = current;
 
@@ -77,24 +106,11 @@ int main()
         cin >> menu;
         if (menu == 1)
         {
-            newstudent(current);
+            newstudentkeyboard(current);
         }
         if (menu == 2)
         {
-            p = begin;
-            while (p != NULL)
-            {
-                cout << "Группа " << p->num << endl;
-                cout << "\tФИО:" << p->begin->name << endl;
-                cout << "\tГруппа: " << p->begin->group << endl;
-                cout << "\tСтипендия: " << p->begin->stipend << endl;
-                cout << "\tОценки:\n";
-                for (int i = 0; i < 5; i++)
-                {
-                    cout << "\t" << i + 1 << ". " << p->begin->grades[i] << endl;
-                }
-                
-            }
+            outputkeyboard(begin);
         }
     }
     while (menu != 0);

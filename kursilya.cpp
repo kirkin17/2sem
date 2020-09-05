@@ -285,8 +285,6 @@ beginer* delet(beginer* begin, string name) //удаление студента
 
 int main()
 {
-	SetConsoleCP(1251);      //русский язык
-	SetConsoleOutputCP(1251);
 	int select;
 	beginer* begin = new beginer;
 	do
