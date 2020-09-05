@@ -27,6 +27,7 @@ struct group
 string inputname()
 {
     string name;
+    cin.ignore(256, '\n');
     getline(cin, name);
     return name;
 }
@@ -34,15 +35,14 @@ string inputname()
 void newstudentkeyboard(group *current)
 {
     current->current = new stud;
-    if (current->begin = NULL)
+    if (current->begin == NULL)
     {
         current->begin = current->current;
     }
 
     system("clear");
     cout << "Введите ФИО студента: ";
-    string name = inputname();
-    current->current->name = name;
+    current->current->name = inputname();
     cout << "Введите номер группы: ";
     int group;
     cin >> group;
@@ -50,20 +50,23 @@ void newstudentkeyboard(group *current)
     current->num = group;
     cout << "Введите оценки: ";
     int grades[5];
-    for(int i=0; i < 5; i++)
+    for(int i = 0; i < 5; i++)
     {
         printf("[%d]. ", i + 1);
+        cin.ignore(256, '\n');
         cin >> grades[i];
         current->current->grades[i] = grades[i];
     }
     cout << "Введите размер стипендии: ";
     int stipend;
+    cin.ignore(256, '\n');
     cin >> stipend;
     current->current->stipend = stipend;
 }
 
 void outputkeyboard(group *p)
 {
+    system("clear");
     while (p != NULL)
     {
         while(p->current != NULL)
@@ -75,11 +78,15 @@ void outputkeyboard(group *p)
             cout << "\tОценки:\n";
             for (int i = 0; i < 5; i++)
             {
-                cout << "\t" << i + 1 << ". " << p->begin->grades[i] << endl;
+                cout << "\t\t" << i + 1 << ". " << p->begin->grades[i] << endl;
             }
+            p->current = p->next;
         }
-        p = p->nextgr;          
+        p = p->nextgr;        
     }
+    cout << "\n\nДля продолжения нажмите enter...\n";
+    cin.ignore(256, '\n');
+    getchar();
 }
 
 int main()

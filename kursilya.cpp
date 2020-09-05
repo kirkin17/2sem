@@ -289,7 +289,7 @@ int main()
 	beginer* begin = new beginer;
 	do
 	{
-		system("cls");
+		system("clear");
 		cout << "Выберете:" << endl << " 1. Вывести список студентов на экран" << endl;
 		cout << " 2. Вывести список студентов в файл" << endl;
 		cout << " 3. Ввести данные о студенте с клавиатуры" << endl;

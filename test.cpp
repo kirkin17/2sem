@@ -1,6 +1,24 @@
 #include <iostream>
 using namespace std;
 
+struct stud
+{
+    string name; // имя
+    int group; //номер группы
+    int grades[5]; //оценки
+    int stipend; //стипендия
+};
+
+struct group
+{
+    stud *begin = NULL; //указатель на начало списка студентов группы
+    stud *current;
+    stud *next = NULL; //следующий в списке группы
+    group *nextgr = NULL; //следующая группа
+    int count = 0; //количество студентов в группе
+    int num; //номер группы
+};
+
 string inputname()
 {
     string name;
@@ -8,11 +26,18 @@ string inputname()
     return name;
 }
 
+void newstud(group *p)
+{
+    p->current = new stud;
+    p->current->name = inputname();
+}
+
 int main()
 {
-    string name;
+    getchar();
     cout << "Введите имя: ";
-    name = inputname();
+    group *p = new group;
+    newstud(p);
 
-    cout << name;
+    cout << p->current->name;
 }
