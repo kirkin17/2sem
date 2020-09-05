@@ -32,6 +32,36 @@ string inputname()
     return name;
 }
 
+void inputstudent(group *begingroup)
+{
+    stud *p = new stud;
+    system("clear");
+    cout << "Введите ФИО студента: ";
+    p->name = inputname();
+    cout << "Введите номер группы: ";
+    int group;
+    cin >> group;
+    p->group = group;
+    if (begingroup == NULL)//////////////////////////////////////////////////////////////////////////////////////////////
+    {
+
+    }
+    cout << "Введите оценки: ";
+    int grades[5];
+    for(int i = 0; i < 5; i++)
+    {
+        printf("[%d]. ", i + 1);
+        cin.ignore(256, '\n');
+        cin >> grades[i];
+        p->grades[i] = grades[i];
+    }
+    cout << "Введите размер стипендии: ";
+    int stipend;
+    cin.ignore(256, '\n');
+    cin >> stipend;
+    p->stipend = stipend;
+}
+
 void newstudentkeyboard(group *current)
 {
     current->current = new stud;
