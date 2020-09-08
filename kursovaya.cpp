@@ -21,7 +21,7 @@ struct group
     stud* next = NULL; //следующий в списке группы
     group* nextgr = NULL; //следующая группа
     int count = 0; //количество студентов в группе
-    int num; //номер группы
+    int num = 0; //номер группы
 };
 
 string inputname()
@@ -32,20 +32,33 @@ string inputname()
     return name;
 }
 
-void inputstudent(group *begingroup)
+group* searchgroup(group* gr, int num, stud *st)
+{
+    do
+    {
+        if (gr->num == num)
+        {
+            return gr;
+        }
+        gr = gr->nextgr;
+    } 
+    while (gr != NULL);
+}
+
+void inputstudent(group *gr)
 {
     stud *p = new stud;
+
     system("clear");
     cout << "Введите ФИО студента: ";
     p->name = inputname();
     cout << "Введите номер группы: ";
     int group;
-    cin >> group;
+    cin >> group; //вводят номер группы, далее проверяем есть ли такая группа, если да, то добавляем в нее, иначе создаем новую
     p->group = group;
-    if (begingroup == NULL)//////////////////////////////////////////////////////////////////////////////////////////////
-    {
+    
+    
 
-    }
     cout << "Введите оценки: ";
     int grades[5];
     for(int i = 0; i < 5; i++)
@@ -143,7 +156,7 @@ int main()
         cin >> menu;
         if (menu == 1)
         {
-            newstudentkeyboard(current);
+            inputstudent(begin);
         }
         if (menu == 2)
         {
