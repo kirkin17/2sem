@@ -68,25 +68,14 @@ void inputstudent(group *gr)
         {
             if (gr->num == numgroup)
             {
-                if (gr->begin == NULL)
-                {
-                    gr->begin = p;
-                }
-                else 
-                {
-                    gr->next = p;
-                }
+                gr->next = p;
             }
             gr = gr->nextgr;
-        }
+        } 
         while (gr->nextgr != NULL);
-
-        if (gr->nextgr == NULL)
-        {
-            gr->nextgr = new group;
-            gr->num = numgroup;
-            gr->begin = p;
-        }
+        gr->nextgr = new group;
+        gr->begin = p;
+        gr->num = numgroup;        
     }
     
     
