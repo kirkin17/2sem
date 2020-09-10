@@ -53,9 +53,41 @@ void inputstudent(group *gr)
     cout << "Введите ФИО студента: ";
     p->name = inputname();
     cout << "Введите номер группы: ";
-    int group;
-    cin >> group; //вводят номер группы, далее проверяем есть ли такая группа, если да, то добавляем в нее, иначе создаем новую
-    p->group = group;
+    int numgroup;
+    cin >> numgroup; //вводят номер группы, далее проверяем есть ли такая группа, если да, то добавляем в нее, иначе создаем новую
+    p->group = numgroup;
+
+    if (gr->num == 0) 
+    {
+        gr->num = numgroup;
+        gr->begin = p;
+    }
+    else
+    {
+        do
+        {
+            if (gr->num == numgroup)
+            {
+                if (gr->begin == NULL)
+                {
+                    gr->begin = p;
+                }
+                else 
+                {
+                    gr->next = p;
+                }
+            }
+            gr = gr->nextgr;
+        }
+        while (gr->nextgr != NULL);
+
+        if (gr->nextgr == NULL)
+        {
+            gr->nextgr = new group;
+            gr->num = numgroup;
+            gr->begin = p;
+        }
+    }
     
     
 
