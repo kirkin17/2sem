@@ -72,10 +72,10 @@ void inputstudent(group *gr)
             }
             gr = gr->nextgr;
         } 
-        while (gr->nextgr != NULL);
-        gr->nextgr = new group;
+        while (gr != NULL);
+        gr = new group;
         gr->begin = p;
-        gr->num = numgroup;        
+        gr->num = numgroup;      
     }
     
     
@@ -96,6 +96,8 @@ void inputstudent(group *gr)
     p->stipend = stipend;
 }
 
+
+/*
 void newstudentkeyboard(group *current)
 {
     current->current = new stud;
@@ -127,24 +129,27 @@ void newstudentkeyboard(group *current)
     cin >> stipend;
     current->current->stipend = stipend;
 }
+*/
 
 void outputkeyboard(group *p)
 {
     system("clear");
     while (p != NULL)
     {
-        while(p->current != NULL)
+        stud *k;
+        k = p->begin;
+        while(k != NULL)
         {
             cout << "Группа: " << p->num << endl;
-            cout << "\tФИО:" << p->current->name << endl;
-            cout << "\tГруппа: " << p->current->group << endl;
-            cout << "\tСтипендия: " << p->current->stipend << endl;
+            cout << "\tФИО:" << k->name << endl;
+            cout << "\tГруппа: " << k->group << endl;
+            cout << "\tСтипендия: " << k->stipend << endl;
             cout << "\tОценки:\n";
             for (int i = 0; i < 5; i++)
             {
-                cout << "\t\t" << i + 1 << ". " << p->begin->grades[i] << endl;
+                cout << "\t\t" << i + 1 << ". " << k->grades[i] << endl;
             }
-            p->current = p->next;
+            k = p->next;
         }
         p = p->nextgr;        
     }
