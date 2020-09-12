@@ -45,7 +45,12 @@ group* searchgroup(group* gr, int num, stud *st)
     while (gr != NULL);
 }
 
-void inputstudent(group *gr)
+void newgroup(group *k)
+{
+
+}
+
+void inputstudent(group *begingr)
 {
     stud *p = new stud;
 
@@ -57,25 +62,39 @@ void inputstudent(group *gr)
     cin >> numgroup; //вводят номер группы, далее проверяем есть ли такая группа, если да, то добавляем в нее, иначе создаем новую
     p->group = numgroup;
 
+    
+    group *gr = begingr;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    gr = new group;
     if (gr->num == 0) 
     {
+        gr = new group;
         gr->num = numgroup;
         gr->begin = p;
     }
     else
     {
-        do
+        gr = new group;
+        while(gr->nextgr != NULL)
         {
             if (gr->num == numgroup)
             {
+                stud *k = gr->begin;
+                while(k != NULL)
+                {
+                k = gr->next;
+                }
                 gr->next = p;
+                return;                
             }
             gr = gr->nextgr;
-        } 
-        while (gr != NULL);
+        }
+        
+        
+        
+        
         gr = new group;
         gr->begin = p;
-        gr->num = numgroup;      
+        gr->num = numgroup;    
     }
     
     
@@ -163,10 +182,8 @@ int main()
     setlocale(LC_ALL, "Russian");
     int menu;
 
-    group *current, *begin, *p; //сразу создаем указатели для создания хотя бы одной группы
-    current = new group;
-    begin = current;
-
+    group *begin, *p; //сразу создаем указатели для создания хотя бы одной группы
+    
     do
     {
         system("clear");
