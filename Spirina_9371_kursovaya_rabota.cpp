@@ -6,7 +6,7 @@
 
 using namespace std;
 
-//��������� ��� �������� ���������
+//структура для хранения студентов
 struct stud { 
 
 	char FIO[50];
@@ -15,34 +15,34 @@ struct stud {
 	int sum=0;
 	int stipend;
 
-	void rus() //������� ��� ����������� �� ��������, �� � �� ��������
+	void rus() //функция для русификации не работала, но я ее оставила
 	{
 		//CharToOemA(FIO,FIO);
 	}
-	//��� �������� ���������� �������� � ������
+	//для хранения следующего элемента в списке
 	stud* next = NULL; 
 };
-//��������� ��� ������ �����
+//структура для списка групп
 struct Grup {
 
-	stud* begin=NULL; //��������� �� ������ ������ ��������� ������
+	stud* begin=NULL; //указатель на начало списка студентов группы
 	int kol=0;
 	int sum=0;
-	int num; //����� ������
+	int num; //номер группы
 
 	Grup* next=NULL;
 
-	//������� ���������� �������� � ������
+	//функция добалвения студента в группу
 	void vstavka_student(stud* p) 
 	{ 
 		stud*  plast = NULL;
 		stud* pnext = begin;
-		//������� � ������� ���������� ������
+		//сначала я изменяю статистику группы
 		kol++;
 		for (int i = 0; i < 5; i++)
 			p->sum += p->ozenka[i];
 		sum += p->sum;
-		//������ � ������ �� ������ �������
+		//запись в список на нужную позицию
 		if( (begin==NULL)||(strcmp(p->FIO, pnext->FIO) < 0) )
 		{
 			p->next = pnext;
@@ -51,7 +51,7 @@ struct Grup {
 		else {
 			for (; pnext != NULL; pnext = pnext->next)
 			{
-				if (strcmp(p->FIO, pnext->FIO) >= 0) plast = pnext; //���������� ������� strcmp ����� � ���������, �� �������, ��� �� �� ���������
+				if (strcmp(p->FIO, pnext->FIO) >= 0) plast = pnext; //встроенную функция strcmp нашла в интернете, не уверена, что мы ее проходили
 				else break;
 			}
 			plast->next = p;
@@ -60,7 +60,7 @@ struct Grup {
 	}
 
 };
-//���� �� �����
+//ввод из файла
 Grup* vvod_File(Grup* beg, char a[50])
 { 
 	ifstream f(a);
@@ -75,13 +75,13 @@ Grup* vvod_File(Grup* beg, char a[50])
 			f >> s->grup >> s->stipend;
 			for (int i = 0; i < 5; i++)
 				f >> s->ozenka[i];
-			//����� � ������ ����� ������ ��� ����������� � ������������
+			//здесь я создаю новую группу или присоединяю к существующей
 			Grup* p = beg;
 			if (beg == NULL)
 			{
 				p = new Grup;
 				beg = p;
-				p->num = s->grup; //���� ����� ������� ���������� ��������������� �����
+				p->num = s->grup; //всем новым группам присваиваю соответствующий номер
 			}
 			else
 			{
@@ -98,9 +98,9 @@ Grup* vvod_File(Grup* beg, char a[50])
 		}
 		f.close();
 	}
-	return beg; //��������� ��������� �� ������ ������� � ������ �����, ����� �� ����������� 
+	return beg; //возвращаю указатель на первый элемент в списке групп, иначе не сохраняется 
 }
-//����� � ����
+//вывод в файл
 void vivod_File(Grup* grup, char a[50])
 { 
 	ofstream f(a,ios::app);
@@ -109,7 +109,7 @@ void vivod_File(Grup* grup, char a[50])
 	while (s!=NULL)
 	{
 		s->rus();
-		f << endl; //�����, ����� ���� �� ������������ �������� ������
+		f << endl; //важно, чтобы файл не заканчивался перевоом строки
 		f << s->FIO << endl;
 		f << s->grup <<" "<< s->stipend << endl;
 		for (int i = 0; i < 5; i++)
@@ -121,20 +121,20 @@ void vivod_File(Grup* grup, char a[50])
 	}
 	f.close();
 }
-//���� � ����������
+//ввод с клавиатуры
 Grup* vvod(Grup* beg)
 {
 	stud* s = new stud;
-	cout << "������� ���\n";
-	cin.get(); //cin.getline ����� ������� ������ �� ������, ������� � ��������� get
+	cout << "Введите имя\n";
+	cin.get(); //cin.getline берет перевод строки за строку, поэтому я использую get
 	cin.getline(s->FIO,50);
 	s->rus();
-	cout << "������� ������ � ���������\n";
+	cout << "Введите группу и стипендию\n";
 	cin >> s->grup >> s->stipend;
-	cout << "������� ������\n";
+	cout << "Введите оценки\n";
 	for (int i = 0; i < 5; i++)
 		cin >> s->ozenka[i];
-	//����� ���� ������ ������ ��� �����������
+	//здесь тоже создаю группу или присоединяю
 	Grup* p = beg;
 	if (beg == NULL)
 	{
@@ -156,7 +156,7 @@ Grup* vvod(Grup* beg)
 	p->vstavka_student(s);
 	return beg;
 }
-//����� �� ����� ���� ��������� ������
+//вывод на экран всех студентов группы
 void vivod(Grup* grup)
 {
 	stud* s = grup->begin;
@@ -171,29 +171,29 @@ void vivod(Grup* grup)
 		s = s->next;
 	}
 }
-//�������� ��������
+//удаление студента
 Grup* delet(Grup* beg, char fio[50], int ngr)
 {
 	Grup* p = beg;
 	for (; p->num != ngr; p=p->next){}
 	stud* s = p->begin;
 	stud* slast=s;
-	//����� �������� ��� �������� �� �����
+	//поиск студента для удаления по имени
 	for (;s!=NULL && strcmp(s->FIO, fio) != 0; s = s->next)
 	{
-		slast = s; //�������� �����������, ����� ������ �� ���������� ��� ��������
+		slast = s; //сохраняю предыдущего, чтобы список не разрушился при удалении
 		if (s == NULL)
 			break;
 	}
 	if (s != NULL)
 	{
-		//���������� �����
+		//пересоздаю связи
 		slast->next = s->next;
 		if (s == p->begin)
 			p->begin = s->next;
 		p->sum -= s->sum;
 		p->kol--;
-		//���� � ������ ����� 0 ��������� � �� ������
+		//если в группе стало 0 студентов я ее удаляю
 		if (p->kol == 0)
 		{
 			p = beg;
@@ -208,29 +208,29 @@ Grup* delet(Grup* beg, char fio[50], int ngr)
 		delete s;
 	}
 	else
-		cout << "������ �� �������";
+		cout << "Ничего не найдено";
 	return beg;
 }
-//��������� ������ � ��������
+//изменение данных о студенте
 Grup* change(Grup* beg, char fio[50], int ngr) 
 {
 	Grup* p = beg;
 	for (; p->num != ngr; p = p->next) {}
 	stud* s = p->begin;
-	//����� � ��� �������� ��� ���������
+	//здесь я ищу студента для изменения
 	for (; strcmp(s->FIO,fio) != 0; s = s->next)
 		if (s == NULL)
 			break;
 	if (s != NULL)
 	{
 		int a;
-		cout << "�������� ��� ��������:\n";
-		cout << "1 ��� \n2 ������ \n3 �������� \n4 ������\n";
+		cout << "выберете что поменять:\n";
+		cout << "1 Имя \n2 Группу \n3 Стипедию \n4 Оценки\n";
 		cin >> a;
 		if (a == 1)
 		{
-			//���� ������ ���, �� ����� ����������� ������
-			cin.get();//������ cin.getline
+			//если меняем имя, то нужно перестроить список
+			cin.get();//защита cin.getline
 			if (p->kol > 1)
 			{
 				stud* snew = p->begin;
@@ -239,8 +239,8 @@ Grup* change(Grup* beg, char fio[50], int ngr)
 				{
 					slast = snew;
 				}
-				cin.getline(s->FIO,50); //����� ���� ��� ������ ����� s �� ������� ������ ���
-				//� ��������� � ������ �������
+				cin.getline(s->FIO,50); //после того как убрали связи s со списком меняем имя
+				//и добавляем в список обратно
 				if (slast != snew)
 					slast->next = s->next;
 				else
@@ -263,9 +263,9 @@ Grup* change(Grup* beg, char fio[50], int ngr)
 		}
 		else if (a == 2)
 		{
-			//������ ������ ��������
+			//меняем группу студента
 			cin >> s->grup;
-			//����� ������ �������� �� ������ ������
+			//здесь убираю студента из старой группы
 			if (s == p->begin) 
 			{
 				p->begin = s->next;
@@ -282,7 +282,7 @@ Grup* change(Grup* beg, char fio[50], int ngr)
 			p->sum -= s->sum;
 			p->kol--;
 			int grup = p->num;
-			//������ ������ ���� � ��� �� �������� ���������
+			//удаляю группу если в ней не осталось студентов
 			if (p->kol == 0)
 			{
 				p = beg;
@@ -294,7 +294,7 @@ Grup* change(Grup* beg, char fio[50], int ngr)
 				plast->next = p->next;
 				delete p;
 			}
-			//��� ��� ������ ����� ������ ��������
+			//ищу или создаю новую группу студенту
 			Grup* p = beg;
 			for (; p->next != NULL; p = p->next)
 				if (p->num == s->grup) break;
@@ -307,11 +307,11 @@ Grup* change(Grup* beg, char fio[50], int ngr)
 			p->vstavka_student(s);
 		}
 		else if (a == 3)
-			cin >> s->stipend;//��������� �������� �����
+			cin >> s->stipend;//стипендия меняется проще
 		else if (a == 4) 
 			for (int i = 0; i < 5; i++) 
 			{
-				//������������� ����� ������ ������ � ��������
+				//перезаписываю сумму оценок группы и студента
 				p->sum -= s->ozenka[i];
 				cin >> s->ozenka[i];
 				p->sum += s->ozenka[i];
@@ -319,42 +319,42 @@ Grup* change(Grup* beg, char fio[50], int ngr)
 	
 	}
 	else
-		cout << "������ �� �������";
+		cout << "Ничего не найдено";
 	return beg;
 }
 
 int main() 
 {
-	//������� ���� � �������
+	//русский язык в консоли
 	setlocale(LC_ALL, "rus");
 	char a[50];
 	int vibor;
 	Grup* g = NULL;
 	do
 	{
-		//����� ��������� ���� �����
+		//вывод студентов всех групп
 		cout << endl;
 		Grup* gnext = g;
 		for (; gnext != NULL; gnext = gnext->next)
 			vivod(gnext);
-		//����
-		cout << "�������� ��������:\n1- �������� ������� � ���������� 2-�������� �������� �� ����� 3- ������� �������� � ����\n";
-		cout << "4-������� ������ � ���������� ������� ������ 5- ������� �������� 6- �������� ���������� � �������� 7- �����\n";
+		//меню
+		cout << "Выберете действие:\n1- добавить элемент с клавиатуры 2-добавить элементы из файла 3- вывести элементы в файл\n";
+		cout << "4-вывести группу с наибольшим средним баллом 5- удалить студента 6- изменить информацию о студенте 7- выйти\n";
 		cin >> vibor;
-		//��������� � ����������
+		//прочитать с клавиатуры
 		if (vibor == 1)
 			g=vvod(g);
 		else if (vibor == 2)
 		{
-			//��������� �� �����
-			cout << "������� �������� �����\n";
+			//прочитать из файла
+			cout << "Введите название файла\n";
 			cin >> a;
 			g=vvod_File(g, a);
 		}
 		else if (vibor == 3)
 		{
-			//������ ��������� ���� ����� � ����(���� �� ���������� ��������� � �����)
-			cout << "������� �������� �����\n";
+			//вывожу студентов всех групп в файл(если он существует записываю в конец)
+			cout << "Введите название файла\n";
 			cin >> a;
 			gnext = g;
 			for (; gnext != NULL; gnext = gnext->next)
@@ -362,40 +362,40 @@ int main()
 		}
 		else if (vibor == 4)
 		{
-			//����� ������ � ����������� ������� ������ 
+			//поиск группы с макимальным средним баллом 
 			Grup* p = g;
 			float max = (float)p->sum / (float)p->kol;
 			int num;
 			for (; p != NULL; p = p->next)
 				if ((float)p->sum / (float)p->kol >= max) {
 					num = p->num;
-					max = (float)p->sum / (float)p->kol; //��� float �� �������������
+					max = (float)p->sum / (float)p->kol; //без float не компилируется
 				}
 			p = g;
 			for (; p->num != num; p = p->next) {}
-			//����� �� ������ ������ � ������������ ������� ������ � �����
+			//вывод на экранн группы с максимальным средним баллом и пауза
 			vivod(p);
 			system("pause");
 		}
 		else if (vibor == 5)
 		{
-			//����� � ������� �������� ��������
+			//здесь я вызываю удаление студента
 			int num;
-			cout << "������� ���\n";
+			cout << "Введите ФИО\n";
 			cin.get();
 			cin.getline(a, 50);
-			cout << "������� ����� ������\n";
+			cout << "Введите номер группы\n";
 			cin >> num;
 			g = delet(g, a, num);
 		}
 		else if (vibor == 6)
 		{
-			//����� � ������� ��������� ������ ��������
+			//здесь я вызываю изменение данных студента
 			int num;
-			cout << "������� ���\n";
+			cout << "Введите ФИО\n";
 			cin.get();
 			cin.getline(a, 50);
-			cout << "������� ����� ������\n";
+			cout << "Введите номер группы\n";
 			cin >> num;
 			g = change(g, a, num);
 		}
