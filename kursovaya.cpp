@@ -74,8 +74,9 @@ group* inputstudent(group *begingr)
     }
     else
     {
-        while(1)
+        while(gr != NULL)
         {
+            
             if (gr->num == numgroup)
             {
                 stud *k = gr->begin;
@@ -83,17 +84,19 @@ group* inputstudent(group *begingr)
                 {
                     k = k->next;
                 }
-                k->next = p; 
-                //break;                 
+                k->next = p;
+                break;                 
+            }
+            else
+            {
+                gr->nextgr = new group;
+                gr = gr->nextgr;
+                gr->begin = p;
+                gr->num = numgroup;
             }
             gr = gr->nextgr;
-            if (gr == NULL) break;
-        }
-
-        //gr = gr->nextgr;
-        gr = new group;
-        gr->begin = p;
-        gr->num = numgroup;
+            
+        }        
     }
     
     
