@@ -32,23 +32,6 @@ string inputname()
     return name;
 }
 
-group* searchgroup(group* gr, int num, stud *st)
-{
-    do
-    {
-        if (gr->num == num)
-        {
-            return gr;
-        }
-        gr = gr->nextgr;
-    } 
-    while (gr != NULL);
-}
-
-void newgroup(group *k)
-{
-
-}
 
 group* inputstudent(group *begingr)
 {
@@ -74,6 +57,10 @@ group* inputstudent(group *begingr)
     }
     else
     {
+        while (gr->nextgr != NULL && gr->num != numgroup)
+        {
+            gr = gr->nextgr;
+        }
         if (gr->num == numgroup)
         {
             stud *k = gr->begin;
@@ -85,6 +72,7 @@ group* inputstudent(group *begingr)
         }
         else
         {
+            gr = begingr;
             while(gr->nextgr != NULL)
             {
                 gr = gr->nextgr;
@@ -94,6 +82,7 @@ group* inputstudent(group *begingr)
             gr->begin = p;
             gr->num = numgroup;
         }
+            
             
     }
     
