@@ -74,42 +74,31 @@ group* inputstudent(group *begingr)
     }
     else
     {
-        do
+        while(1)
         {
             if (gr->num == numgroup)
             {
                 stud *k = gr->begin;
-                do
+                while(k->next != NULL)
                 {
-                    if (k->next == NULL)
-                    {
-                        k->next = p;
-                    }
                     k = k->next;
-                }                
-                while(k->next != NULL);
-                                
+                }
+                k->next = p; 
+                //break;                 
             }
-            else
-            {
-                gr = gr->nextgr;
-                gr = new group;
-                gr->begin = p;
-            }
+            gr = gr->nextgr;
+            if (gr == NULL) break;
         }
-        while(gr->nextgr != NULL);
-        
-        
-        
-        gr = gr->nextgr;
+
+        //gr = gr->nextgr;
         gr = new group;
         gr->begin = p;
-        gr->num = numgroup;   
+        gr->num = numgroup;
     }
     
     
 
-    cout << "Введите оценки: ";
+    cout << "Введите оценки: \n";
     int grades[5];
     for(int i = 0; i < 5; i++)
     {
@@ -168,11 +157,11 @@ void outputkeyboard(group *p)
     {
         stud *k;
         k = p->begin;
+        cout << "Группа: " << p->num << endl;
         while(k != NULL)
         {
-            cout << "Группа: " << p->num << endl;
             cout << "\tФИО:" << k->name << endl;
-            cout << "\tГруппа: " << k->group << endl;
+            //cout << "\tГруппа: " << k->group << endl;
             cout << "\tСтипендия: " << k->stipend << endl;
             cout << "\tОценки:\n";
             for (int i = 0; i < 5; i++)
