@@ -74,29 +74,27 @@ group* inputstudent(group *begingr)
     }
     else
     {
-        while(gr != NULL)
+        if (gr->num == numgroup)
         {
-            
-            if (gr->num == numgroup)
+            stud *k = gr->begin;
+            while(k->next != NULL)
             {
-                stud *k = gr->begin;
-                while(k->next != NULL)
-                {
-                    k = k->next;
-                }
-                k->next = p;
-                break;                 
+                k = k->next;
             }
-            else
+            k->next = p;
+        }
+        else
+        {
+            while(gr->nextgr != NULL)
             {
-                gr->nextgr = new group;
                 gr = gr->nextgr;
-                gr->begin = p;
-                gr->num = numgroup;
             }
+            gr->nextgr = new group;
             gr = gr->nextgr;
+            gr->begin = p;
+            gr->num = numgroup;
+        }
             
-        }        
     }
     
     
@@ -158,9 +156,9 @@ void outputkeyboard(group *p)
     system("clear");
     while (p != NULL)
     {
+        cout << "Группа: " << p->num << endl;
         stud *k;
         k = p->begin;
-        cout << "Группа: " << p->num << endl;
         while(k != NULL)
         {
             cout << "\tФИО:" << k->name << endl;
