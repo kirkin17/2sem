@@ -32,6 +32,17 @@ void newstud(group *p)
     p->current->name = inputname();
 }
 
+void putingroup(group *gr, stud *st)
+{
+    stud *k;
+    while(gr->next != NULL)
+    {
+        if(gr->next == NULL)
+        gr->next = st;
+        k = gr->next;
+    }
+}
+
 int main()
 {
     getchar();

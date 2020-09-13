@@ -12,13 +12,13 @@ struct stud
     int group; //номер группы
     int grades[5]; //оценки
     int stipend; //стипендия
+    stud *next;
 };
 
 struct group
 {
     stud *begin = NULL; //указатель на начало списка студентов группы
     stud *current = NULL;
-    stud* next = NULL; //следующий в списке группы
     group* nextgr = NULL; //следующая группа
     int count = 0; //количество студентов в группе
     int num = 0; //номер группы
@@ -50,8 +50,9 @@ void newgroup(group *k)
 
 }
 
-void inputstudent(group *begingr)
+group* inputstudent(group *begingr)
 {
+    using namespace std;
     stud *p = new stud;
 
     system("clear");
@@ -63,38 +64,47 @@ void inputstudent(group *begingr)
     p->group = numgroup;
 
     
-    group *gr = begingr;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    gr = new group;
-    if (gr->num == 0) 
+    group *gr = begingr;
+    if (gr == NULL) 
     {
-        gr = new group;
+        begingr = new group;
+        gr = begingr;
         gr->num = numgroup;
         gr->begin = p;
     }
     else
     {
-        gr = new group;
-        while(gr->nextgr != NULL)
+        do
         {
             if (gr->num == numgroup)
             {
                 stud *k = gr->begin;
-                while(k != NULL)
+                do
                 {
-                k = gr->next;
-                }
-                gr->next = p;
-                return;                
+                    if (k->next == NULL)
+                    {
+                        k->next = p;
+                    }
+                    k = k->next;
+                }                
+                while(k->next != NULL);
+                                
             }
-            gr = gr->nextgr;
+            else
+            {
+                gr = gr->nextgr;
+                gr = new group;
+                gr->begin = p;
+            }
         }
+        while(gr->nextgr != NULL);
         
         
         
-        
+        gr = gr->nextgr;
         gr = new group;
         gr->begin = p;
-        gr->num = numgroup;    
+        gr->num = numgroup;   
     }
     
     
@@ -113,6 +123,7 @@ void inputstudent(group *begingr)
     cin.ignore(256, '\n');
     cin >> stipend;
     p->stipend = stipend;
+    return begingr;
 }
 
 
@@ -168,7 +179,7 @@ void outputkeyboard(group *p)
             {
                 cout << "\t\t" << i + 1 << ". " << k->grades[i] << endl;
             }
-            k = p->next;
+            k = k->next;
         }
         p = p->nextgr;        
     }
@@ -182,7 +193,7 @@ int main()
     setlocale(LC_ALL, "Russian");
     int menu;
 
-    group *begin, *p; //сразу создаем указатели для создания хотя бы одной группы
+    group *begin = NULL; //сразу создаем указатели для создания хотя бы одной группы
     
     do
     {
@@ -199,7 +210,7 @@ int main()
         cin >> menu;
         if (menu == 1)
         {
-            inputstudent(begin);
+            begin = inputstudent(begin);
         }
         if (menu == 2)
         {
