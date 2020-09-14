@@ -27,8 +27,16 @@ group *beging = NULL; //сразу создаем указатель для хр
 string inputname()
 {
     string name;
-    std::cin.ignore(256, '\n');
-    getline(std::cin, name);
+    while (1) 
+    {
+	    std::cin.ignore(256, '\n');
+        getline(std::cin, name);
+		if (cin.good()) break;
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Неправильный ввод!\n";
+        cout << "ФИО: ";
+	}
     return name;
 }
 
@@ -72,7 +80,7 @@ void inputstudent(stud *p)
     }
 }
 
-group inputkeyboard()
+void inputkeyboard()
 {
     stud *p = new stud;
 
@@ -81,7 +89,15 @@ group inputkeyboard()
     p->name = inputname();
     std::cout << "Введите номер группы: ";
     int numgroup;
-    std::cin >> numgroup; //вводят номер группы, далее проверяем есть ли такая группа, если да, то добавляем в нее, иначе создаем новую
+    while (1) //вводят номер группы, далее проверяем есть ли такая группа, если да, то добавляем в нее, иначе создаем новую
+    {
+	    std::cin >> numgroup;
+		if (cin.good() && numgroup > 0) break;
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Неправильный ввод!\n";
+        cout << "Введите номер группы: ";
+	}
     p->group = numgroup;
 
 
@@ -93,14 +109,29 @@ group inputkeyboard()
     for(int i = 0; i < 5; i++)
     {
         printf("[%d]. ", i + 1);
-        std::cin.ignore(256, '\n');
-        std::cin >> grades[i];
+        while (1)
+        {
+	        std::cin >> grades[i];
+	    	if (cin.good() && grades[i] > 0 && grades[i] <= 5) break;
+		    cin.clear();
+		    cin.ignore(100, '\n');
+	    	cout << "Неправильный ввод!\n";
+            printf("[%d]. ", i + 1);
+	    }
         p->grades[i] = grades[i];
     }
     std::cout << "Введите размер стипендии: ";
     int stipend;
-    std::cin.ignore(256, '\n');
-    std::cin >> stipend;
+    while (1)
+    {
+        std::cin >> stipend;
+	 	if (cin.good() && stipend >= 0) break;
+	    cin.clear();
+	    cin.ignore(100, '\n');
+	   	cout << "Неправильный ввод!\n";
+        cout << "Введите размер стипендии: ";
+	}
+    
     p->stipend = stipend;
     inputstudent(p);
 }
@@ -128,6 +159,15 @@ int outputkeyboardfordelete(group *p)
 
 void outputkeyboard(group *p)
 {
+    if(p == NULL)
+    {
+        system("clear");
+        cout << "Список пуст!\n";
+        std::cout << "\nДля продолжения нажмите enter...\n";
+        std::cin.ignore(256, '\n');
+        getchar();
+        return;
+    }
     system("clear");
     while (p != NULL)
     {
@@ -203,6 +243,11 @@ void outputfile() //вывод в файл
         gr = gr->nextgr;
     }
 	file.close();
+    system("clear");
+    cout << "Результат в файле [./out.txt]\n";
+    std::cout << "\nДля продолжения нажмите enter...\n";
+    std::cin.ignore(256, '\n');
+    getchar();
 }
 
 void changeinfo(group *gr)
@@ -210,78 +255,101 @@ void changeinfo(group *gr)
 
 }
 
-void deletegroup(group *gr)
+void deletegroup(group *destgr)
 {
+    group *gr;
+    group *lastgr;
+    gr = beging;
+    while(gr != destgr)
+    {
+        lastgr = gr;
+        gr = gr->nextgr;
+    }
+    stud *k = gr->begin;
+    while(k != NULL)
+    {
+        k = k->next;
+        delete k;                  
+    }
     if(gr == beging)
     {
-        unsigned int n = 0;
-        cout << "Группы:\n\n";
-        while(gr != NULL)
-        {
-            cout << ++n << ". " << gr->num << endl;
-            gr = gr->nextgr;
-        }
-        cout << "Введите номер группы: ";
-        unsigned int numgroup;
-        while (1) 
-        {
-		    cin >> numgroup;
-		    if (cin.good() && numgroup > 0) break;
-		    cin.clear();
-		    cin.ignore(100, '\n');
-		    cout << "Неправильный ввод!\n";
-            cout << "Введите номер группы: ";
-	    }
-        gr = beging;
-        bool flag;
-        group *lastgr;
-        while(gr != NULL)
-        {
-            if(gr->num == numgroup)
-            {
-                flag = true;
-                stud *k = gr->begin;
-                while(k != NULL)
-                {
-                    k = k->next;
-                    delete k;                  
-                }
-                lastgr->nextgr = gr->nextgr;
-                delete gr;
-                break;              
-            }
-            lastgr = gr;
-            gr = gr->nextgr;
-            
-        }
-        if(flag == false) cout << "\nТакой группы нет!";
-        std::cout << "\nДля продолжения нажмите enter...\n";
-        std::cin.ignore(256, '\n');
-        getchar();
+        beging = gr->nextgr;
     }
     else
     {
-        group *destgr = gr;
-        group *lastgr;
-        gr = beging;
-        while(gr != destgr)
-        {
-            lastgr = gr;
-            gr = gr->nextgr;
-        }
-        stud *k = gr->begin;
-        while(k != NULL)
-        {
-            k = k->next;
-            delete k;                  
-        }
         lastgr->nextgr = gr->nextgr;
-        delete gr;             
     }
+    
+    delete gr;
+}
+
+void deletegroupmenu(group *gr)
+{
+    unsigned int n = 0;
+    system("clear");
+    cout << "Группы:\n\n";
+    while(gr != NULL)
+    {
+        cout << ++n << ". " << gr->num << endl;
+        gr = gr->nextgr;
+    }
+    cout << "Введите номер группы: ";
+    unsigned int numgroup;
+    while (1) 
+    {
+	    cin >> numgroup;
+		if (cin.good() && numgroup > 0) break;
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Неправильный ввод!\n";
+        cout << "Введите номер группы: ";
+	}
+    gr = beging;
+    bool flag;
+    group *lastgr;
+    while(gr != NULL)
+    {
+        if(gr->num == numgroup)
+        {
+            flag = true;
+            stud *k = gr->begin;
+            while(k != NULL)
+            {
+                k = k->next;
+                delete k;                  
+            }
+            if(gr == beging)
+            {
+                beging = gr->nextgr;
+            }
+            else
+            {
+                lastgr->nextgr = gr->nextgr;
+            }
+            delete gr;
+            break;              
+        }
+        lastgr = gr;
+        gr = gr->nextgr;
+            
+    }
+    if(flag == false) cout << "\nТакой группы нет!";
+    std::cout << "\nДля продолжения нажмите enter...\n";
+    std::cin.ignore(256, '\n');
+    getchar();
 }
 
 void deletestudent(group *gr)
 {
+    if(gr == NULL)
+    {
+        system("clear");
+        cout << "Список пуст!\n";
+        std::cout << "\nДля продолжения нажмите enter...\n";
+        std::cin.ignore(256, '\n');
+        getchar();
+        return;
+    }
     system("clear");
     cout << "Чтобы удалить студента, будет выведен список студентов. Запомните номер студента и затем введите его!\n\n";
     //cout << "Или введите полностью ФИО\n";
@@ -375,7 +443,15 @@ int main()
         std::cout << " 8. Вывести студентов, сгруппированных по размеру стипендии(ИДЗ)" << endl;
         std::cout << " 0. Выход" << endl << endl;
         std::cout << "Выберите действие: ";
-        std::cin >> menu;
+        while (1) 
+        {
+	        cin >> menu;
+		    if (cin.good() && menu >= 0 && menu <= 8) break;
+		    cin.clear();
+		    cin.ignore(100, '\n');
+		    cout << "Неправильный ввод!\n";
+            cout << "Выберите действие: ";
+	    }
         if (menu == 1)
         {
             inputkeyboard();
@@ -402,7 +478,7 @@ int main()
         }
         if (menu == 7)
         {
-            deletegroup(beging);
+            deletegroupmenu(beging);
         }
     }
     while (menu != 0);
