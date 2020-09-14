@@ -254,8 +254,8 @@ void deletegroup(group *gr)
             gr = gr->nextgr;
             
         }
-        if(flag == false) cout << "Такой группы нет!";
-        std::cout << "\n\nДля продолжения нажмите enter...\n";
+        if(flag == false) cout << "\nТакой группы нет!";
+        std::cout << "\nДля продолжения нажмите enter...\n";
         std::cin.ignore(256, '\n');
         getchar();
     }
@@ -304,31 +304,54 @@ void deletestudent(group *gr)
     while(gr != NULL)
     {
         stud *lastst;
-        while(st->next != NULL && k != delnum)
+        while(st->next != NULL && k < delnum)
         {
+            
             lastst = st;
             st = st->next;
             k++;
         }
+        if (k < delnum)
+        {
+            gr = gr->nextgr;
+            st = gr->begin;
+            k++;
+            continue;
+        }
+        /////
         if(st == gr->begin)
         {
-            gr->begin = gr->begin->next;
-            delete st;
-            return;
-        }
-        if(st->next != NULL)
-        {
-            del = st;
-            lastst->next = st->next;
-            delete del;
-            return;
+            if(st->next == NULL)
+            {
+                //lastst->next = NULL;
+                del = st;
+                delete del;
+                deletegroup(gr);
+                return;
+            }
+            else
+            {
+                gr->begin = st->next;
+                delete st;
+                return;
+            }
         }
         else
         {
-            lastst->next = NULL;
-            del = st;
-            delete del;
-            return;
+            if(st->next == NULL)
+            {
+                lastst->next = NULL;
+                del = st;
+                delete del;
+                return;
+            }
+            else
+            {
+                del = st;
+                lastst->next = st->next;
+                delete del;
+                return;
+            }
         }
         gr = gr->nextgr;
     }
