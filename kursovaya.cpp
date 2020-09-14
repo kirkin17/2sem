@@ -105,9 +105,8 @@ group inputkeyboard()
     inputstudent(p);
 }
 
-void outputkeyboardfordelete(group *p)
+int outputkeyboardfordelete(group *p)
 {
-    system("clear");
     unsigned int key = 1;
     while (p != NULL)
     {
@@ -123,10 +122,7 @@ void outputkeyboardfordelete(group *p)
         }
         p = p->nextgr;        
     }
-    std::cout << "\n\nДля продолжения нажмите enter...\n";
-    //std::cin.ignore(256, '\n');
-    getchar();
-    //std::cin.ignore(256, '\n');
+    return key;
 }
 
 
@@ -214,15 +210,128 @@ void changeinfo(group *gr)
 
 }
 
+void deletegroup(group *gr)
+{
+    if(gr == beging)
+    {
+        unsigned int n = 0;
+        cout << "Группы:\n\n";
+        while(gr != NULL)
+        {
+            cout << ++n << ". " << gr->num << endl;
+            gr = gr->nextgr;
+        }
+        cout << "Введите номер группы: ";
+        unsigned int numgroup;
+        while (1) 
+        {
+		    cin >> numgroup;
+		    if (cin.good() && numgroup > 0) break;
+		    cin.clear();
+		    cin.ignore(100, '\n');
+		    cout << "Неправильный ввод!\n";
+            cout << "Введите номер группы: ";
+	    }
+        gr = beging;
+        bool flag;
+        group *lastgr;
+        while(gr != NULL)
+        {
+            if(gr->num == numgroup)
+            {
+                flag = true;
+                stud *k = gr->begin;
+                while(k != NULL)
+                {
+                    k = k->next;
+                    delete k;                  
+                }
+                lastgr->nextgr = gr->nextgr;
+                delete gr;
+                break;              
+            }
+            lastgr = gr;
+            gr = gr->nextgr;
+            
+        }
+        if(flag == false) cout << "Такой группы нет!";
+        std::cout << "\n\nДля продолжения нажмите enter...\n";
+        std::cin.ignore(256, '\n');
+        getchar();
+    }
+    else
+    {
+        group *destgr = gr;
+        group *lastgr;
+        gr = beging;
+        while(gr != destgr)
+        {
+            lastgr = gr;
+            gr = gr->nextgr;
+        }
+        stud *k = gr->begin;
+        while(k != NULL)
+        {
+            k = k->next;
+            delete k;                  
+        }
+        lastgr->nextgr = gr->nextgr;
+        delete gr;             
+    }
+}
+
 void deletestudent(group *gr)
 {
     system("clear");
-    cout << "Чтобы удалить студента, будет выведен список студентов. Запомните номер студента и затем введите его!\n";
-    cout << "Или введите полностью ФИО\n";
-    std::cin.ignore(256, '\n');
-    std::getchar();
-    outputkeyboardfordelete(beging);
-
+    cout << "Чтобы удалить студента, будет выведен список студентов. Запомните номер студента и затем введите его!\n\n";
+    //cout << "Или введите полностью ФИО\n";
+    unsigned int count;
+    count = outputkeyboardfordelete(beging);
+    unsigned int delnum;
+    cout << "Введите номер студента: ";
+    while (1)
+    {
+		cin >> delnum;
+		if (cin.good() && delnum > 0 && delnum <= count) break;
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Неправильный ввод!\n";
+        cout << "Введите номер студента: ";
+	}
+    stud *del, *studlast;
+    unsigned int k = 1;
+    stud *st = gr->begin;
+    while(gr != NULL)
+    {
+        stud *lastst;
+        while(st->next != NULL && k != delnum)
+        {
+            lastst = st;
+            st = st->next;
+            k++;
+        }
+        if(st == gr->begin)
+        {
+            gr->begin = gr->begin->next;
+            delete st;
+            return;
+        }
+        if(st->next != NULL)
+        {
+            del = st;
+            lastst->next = st->next;
+            delete del;
+            return;
+        }
+        else
+        {
+            lastst->next = NULL;
+            del = st;
+            delete del;
+            return;
+        }
+        gr = gr->nextgr;
+    }
 }
 
 int main()
@@ -267,6 +376,10 @@ int main()
         if (menu == 6)
         {
             deletestudent(beging);
+        }
+        if (menu == 7)
+        {
+            deletegroup(beging);
         }
     }
     while (menu != 0);
