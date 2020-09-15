@@ -12,14 +12,21 @@ struct stud
     int grades[5]; //оценки
     int stipend; //стипендия
     stud *next;
+    stud *nextstip;
 };
 
 struct group
 {
     stud *begin = NULL; //указатель на начало списка студентов группы
     group* nextgr = NULL; //следующая группа
-    int count = 0; //количество студентов в группе
     int num = 0; //номер группы
+};
+
+struct idz
+{
+    int stipend = 0;
+    stud *begin = NULL;
+    idz *nextgr = NULL;
 };
 
 group *beging = NULL; //сразу создаем указатель для хранения начала групп, этот адрес нам нужен во всей программе
@@ -136,7 +143,7 @@ void inputkeyboard()
     inputstudent(p);
 }
 
-int outputkeyboardfordelete(group *p)
+int outputwithkey(group *p)
 {
     unsigned int key = 1;
     while (p != NULL)
@@ -252,7 +259,107 @@ void outputfile() //вывод в файл
 
 void changeinfo(group *gr)
 {
+    if(gr == NULL)
+    {
+        system("clear");
+        cout << "Список пуст!\n";
+        std::cout << "\nДля продолжения нажмите enter...\n";
+        std::cin.ignore(256, '\n');
+        getchar();
+        return;
+    }
+    system("clear");
+    cout << "Чтобы изменить студента, будет выведен список. Запомните номер студента и затем введите его!\n\n";
+    //cout << "Или введите полностью ФИО\n";
+    unsigned int count;
+    count = outputwithkey(beging);
+    unsigned int changenum;
+    cout << "Введите номер студента: ";
+    while (1)
+    {
+		cin >> changenum;
+		if (cin.good() && changenum > 0 && changenum <= count) break;
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Неправильный ввод!\n";
+        cout << "Введите номер студента: ";
+	}
+    stud *del;
+    unsigned int k = 1;
+    stud *st = gr->begin;
+    while(gr != NULL)
+    {
+        stud *lastst;
+        while(st->next != NULL && k < changenum)
+        {
+            
+            lastst = st;
+            st = st->next;
+            k++;
+        }
+        if (k < changenum)
+        {
+            gr = gr->nextgr;
+            st = gr->begin;
+            k++;
+            continue;
+        }
+        /////
+        unsigned int changech;
+        cout << "Что изменить: \n";
+        cout << "1. Имя\n";
+        cout << "2. Группу\n";
+        cout << "3. Стипендию\n";
+        cout << "4. Оценки\n";
+        
+        while (1)
+        {
+		    cin >> changech;
+		    if (cin.good() && changech > 0 && changech <= count) break;
+		    cin.clear();
+		    cin.ignore(100, '\n');
+		    cout << "Неправильный ввод!\n";
+            cout << "Введите номер студента: ";
+	    }
 
+        if(changech == 1)
+        {
+            cout << "Введите имя: ";
+            string name = inputname();
+            st->name = name;
+        }
+        
+        if(changech == 2)
+        {
+            std::cout << "Введите номер группы: ";
+            int numgroup;
+            while (1)
+            {
+	            std::cin >> numgroup;
+		        if (cin.good() && numgroup > 0) break;
+		        cin.clear();
+		        cin.ignore(100, '\n');
+		        cout << "Неправильный ввод!\n";
+                cout << "Введите номер группы: ";
+	        }
+///////////////////////////
+            if (st->next == NULL)
+            {
+                deletest(st);
+            }
+            else
+            {
+                lastst->next = st->next;
+                st->group = numgroup;
+                inputstudent(st);
+                deletest(st);
+            }      
+            
+        }
+        
+                
+        gr = gr->nextgr;
+    }
 }
 
 void deletegroup(group *destgr)
@@ -339,6 +446,63 @@ void deletegroupmenu(group *gr)
     getchar();
 }
 
+void deletest(stud *destst)
+{
+    group *gr;
+    group *lastgr;
+    stud *lastst;
+    stud *st;
+    gr = beging;
+    while(gr != NULL)
+    {
+        while(st != destst)
+        {
+            lastst = st;
+            st = st->next;
+        }
+        if(st == destst)
+        {
+            if(st == gr->begin)
+            {
+                if(st->next == NULL)
+                {
+                    lastst->next = NULL;
+                    delete st;
+                    deletegroup(gr);
+                    return;
+                }
+                else
+                {
+                   gr->begin = st->next;
+                   delete st;
+                   return; 
+                }
+            }
+            else
+            {
+                if(st->next == NULL)
+                {
+                    lastst->next = NULL;
+                    delete st;
+                    return;
+                }
+                else
+                {
+                    lastst->next = st->next;
+                    delete st;
+                    return;
+                }
+                
+            }    
+        }
+        else
+        {
+            lastgr = gr;
+            gr = gr->nextgr;
+        }
+    }
+}
+
 void deletestudent(group *gr)
 {
     if(gr == NULL)
@@ -351,10 +515,10 @@ void deletestudent(group *gr)
         return;
     }
     system("clear");
-    cout << "Чтобы удалить студента, будет выведен список студентов. Запомните номер студента и затем введите его!\n\n";
+    cout << "Чтобы удалить студента, будет выведен список. Запомните номер студента и затем введите его!\n\n";
     //cout << "Или введите полностью ФИО\n";
     unsigned int count;
-    count = outputkeyboardfordelete(beging);
+    count = outputwithkey(beging);
     unsigned int delnum;
     cout << "Введите номер студента: ";
     while (1)
@@ -366,7 +530,7 @@ void deletestudent(group *gr)
 		cout << "Неправильный ввод!\n";
         cout << "Введите номер студента: ";
 	}
-    stud *del, *studlast;
+    stud *del;
     unsigned int k = 1;
     stud *st = gr->begin;
     while(gr != NULL)
@@ -425,6 +589,57 @@ void deletestudent(group *gr)
     }
 }
 
+void idzfunc(group *gr)
+{
+    idz *beginidz = new idz;
+    beginidz->begin = gr->begin;
+    beginidz->stipend = gr->begin->stipend;
+    idz *idzgr = beginidz;
+    while(gr != NULL)
+    {
+        stud* st = gr->begin;
+        while(st != NULL)
+        {
+            unsigned int stip = st->stipend;
+            if(stip == idzgr->stipend)
+            {
+                stud *k = idzgr->begin;
+                stud *last;
+                while(k != NULL)
+                {
+                    last = k;
+                    k = k->nextstip;
+                }
+                if(k == NULL) k = new stud;
+                k->nextstip = st;
+            }
+            st = st->next;
+        }
+        gr = gr->nextgr;
+    }
+
+
+    system("clear");
+    idzgr = beginidz;
+    while(idzgr != NULL)
+    {
+        cout << "Стипендия: " << idzgr->stipend << endl << endl;
+        stud *k = idzgr->begin;
+        unsigned int i = 0;
+        while(k != NULL)
+        {
+            cout << i+1 << ". " << k->name << endl;
+            k = k->next;
+        }
+        cout << endl;
+        idzgr = idzgr->nextgr;
+    }
+    std::cout << "\nДля продолжения нажмите enter...\n";
+    std::cin.ignore(256, '\n');
+    getchar();
+}
+
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -479,6 +694,10 @@ int main()
         if (menu == 7)
         {
             deletegroupmenu(beging);
+        }
+        if (menu == 8)
+        {
+            idzfunc(beging);
         }
     }
     while (menu != 0);
