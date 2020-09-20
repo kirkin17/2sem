@@ -7,48 +7,96 @@ struct stud
     int group; //номер группы
     int grades[5]; //оценки
     int stipend; //стипендия
+    stud *next;
 };
 
 struct group
 {
     stud *begin = NULL; //указатель на начало списка студентов группы
-    stud *current;
-    stud *next = NULL; //следующий в списке группы
-    group *nextgr = NULL; //следующая группа
+    group* nextgr = NULL; //следующая группа
     int count = 0; //количество студентов в группе
-    int num; //номер группы
+    int num = 0; //номер группы
 };
 
-string inputname()
+struct idz
 {
-    string name;
-    getline(cin, name);
-    return name;
-}
+    int stipend = 0;
+    stud *begin = NULL;
+    idz *nextgr = NULL;
+};
 
-void newstud(group *p)
-{
-    p->current = new stud;
-    p->current->name = inputname();
-}
+group *beging = NULL;
 
-void putingroup(group *gr, stud *st)
+
+void idzfunc(group *gr)
 {
-    stud *k;
-    while(gr->next != NULL)
+    idz *beginidz = new idz;
+    beginidz->begin = gr->begin;
+    beginidz->stipend = gr->begin->stipend;
+    idz *idzgr = beginidz;
+    while(gr != NULL)
     {
-        if(gr->next == NULL)
-        gr->next = st;
-        k = gr->next;
+        unsigned int step;
+        stud* st = gr->begin;
+        while(st != NULL)
+        {
+            step = st->stipend;
+            while(idzgr != NULL)
+            {
+                stud *idzst = beginidz->begin;
+                while(idzst != NULL)
+                {
+                    if(step == idzgr->stipend)
+                    {
+                        if(idzst->next == NULL) idzst->next = new stud;
+                        idzst->next = st;
+                    }
+                    idzst = idzst->next;
+                }
+                idzgr = idzgr->nextgr;
+            }
+            st = st->next;
+        }
+        gr = gr->nextgr;
     }
+
 }
+
+void idzfunc(group *gr)
+{
+    idz *beginidz = new idz;
+    beginidz->begin = gr->begin;
+    beginidz->stipend = gr->begin->stipend;
+    idz *idzgr = beginidz;
+    while(gr != NULL)
+    {
+        stud* st = gr->begin;
+        while(st != NULL)
+        {
+            unsigned int step = st->stipend;
+            if(step == idzgr->stipend)
+            {
+                stud *k = idzgr->begin->next;
+                while(k != NULL)
+                {
+                    k = k->next;
+                }
+                if(k == NULL) k = new stud;
+                k = st;
+            }
+            st = st->next;
+        }
+        gr = gr->nextgr;
+    }
+
+}
+
 
 int main()
 {
+    group *begin;
     getchar();
     cout << "Введите имя: ";
     group *p = new group;
-    newstud(p);
-
-    cout << p->current->name;
+    idzfunc(begin);
 }
