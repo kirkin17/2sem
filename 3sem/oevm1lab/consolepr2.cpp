@@ -1,5 +1,5 @@
 #include <iostream>
-#include <conio.h>
+#include "ncursesw/ncurses.h"
 
 using namespace std;
 
@@ -100,7 +100,7 @@ void signed_longlong_int()
 	cin >> Long_Long;
 	for (int i = sizeof(long long) * 8 - 1; i >= 0; --i)
 	{
-		num = (Long_Long & (long long(1) << i));
+		num = (Long_Long & (1 << i));
 		cout << num;
 	}
 }
@@ -113,7 +113,7 @@ void unsigned_longlong_int()
 	cin >> U_Long_Long;
 	for (int i = sizeof(unsigned long long) * 8 - 1; i >= 0; --i)
 	{
-		num = (U_Long_Long & (unsigned long long(1) << i));
+		num = (U_Long_Long & (1 << i));
 		cout << num;
 	}
 }
@@ -154,11 +154,11 @@ int menu()
 	int c;
 
 	cout << endl << "1. Начало" << endl << "2. Выход" << endl;
-	/*int c;*/
 	do
 	{
-		c = _getch();
-	} while (!((c > '0') && (c < '2')));
+		c = getch();
+	} 
+	while (!((c == '0') && (c == '2')));
 	/*cin >> c;*/
 	switch (c) {
 	case '1':
@@ -166,7 +166,7 @@ int menu()
 		cout << endl << "1) Int" << endl << "2) Char" << endl << "3) Float" << endl << "4) Double" << endl;
 		do
 		{
-			c1 = _getch();
+			c1 = getch();
 		} while (!((c1 > '0') && (c1 < '5')));
 		/*cin >> c1;*/
 		switch (c1)
@@ -176,7 +176,7 @@ int menu()
 			cout << endl << "1) Signed" << endl << "2) Unsigned" << endl;
 			do
 			{
-				c3 = _getch();
+				c3 = getch();
 			} while (!((c3 > '0') && (c3 < '3')));
 			/*cin >> c3;*/
 			switch (c3) {
@@ -185,7 +185,7 @@ int menu()
 				cout << endl << "1) Long" << endl << "2) Short" << endl << "3) Обычный " << endl << "4) Long long" << endl;
 				do
 				{
-					c4 = _getch();
+					c4 = getch();
 				} while (!((c4 > '0') && (c4 < '5')));
 				/*cin >> c4;*/
 				switch (c4) {
@@ -208,7 +208,7 @@ int menu()
 				cout << endl << "1) Long" << endl << "2) Short" << endl << "3) Обычный" << endl << "4) Long long" << endl;
 				do
 				{
-					c5 = _getch();
+					c5 = getch();
 				} while (!((c5 > '0') && (c5 < '5')));
 				/*cin >> c5;*/
 				switch (c5) {
@@ -233,7 +233,7 @@ int menu()
 			cout << endl << "1) Signed" << endl << "2) Unsigned" << endl;
 			do
 			{
-				c6 = _getch();
+				c6 = getch();
 			} while (!((c6 > '0') && (c6 < '3')));
 			/*cin >> c6;*/
 			switch (c6) {
@@ -250,7 +250,7 @@ int menu()
 			cout << endl << "1) Long" << endl << "2) Обычный" << endl;
 			do
 			{
-				c7 = _getch();
+				c7 = getch();
 			} while (!((c7 > '0') && (c7 < '3')));
 			/*cin >> c6;*/
 			switch (c7) {
@@ -267,7 +267,7 @@ int menu()
 			cout << endl << "1) Long" << endl << "2) Обычный" << endl;
 			do
 			{
-				c8 = _getch();
+				c8 = getch();
 			} while (!((c8 > '0') && (c8 < '3')));
 			/*cin >> c6;*/
 			switch (c8) {
@@ -291,16 +291,18 @@ int menu()
 bool contin()
 {
 	cout << "\nДля продолжения нажмите enter...\n";
-	_getch();
+	getch();
 	return 1;
 }
 
 int main()
 {
 	setlocale(LC_ALL, "rus");
+	//initscr();
 	do
 	{
 		menu();
 	} while (contin());
 	system("pause");
+	//endwin();
 }
